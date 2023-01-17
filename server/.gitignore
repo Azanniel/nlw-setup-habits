@@ -1,0 +1,8 @@
+# Keep environment variables out of version control
+
+# Folders
+node_modules
+
+# Files
+.env
+prisma/dev.db*
