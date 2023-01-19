@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import { prisma } from './lib/prisma';
 import { createHabitBody } from './dtos/create-habit-body';
 import { getDayParams } from './dtos/get-day-params';
+import { toggleHabitParams } from './dtos/toggle-habit-params';
 
 export async function appRoutes(app: FastifyInstance) {
   app.post('/habits', async (request, response) => {
@@ -27,7 +28,7 @@ export async function appRoutes(app: FastifyInstance) {
     return response.status(201).send();
   });
 
-  app.get('/day', async (request, response) => {
+  app.get('/day', async (request) => {
     const { date } = getDayParams.parse(request.query);
 
     const parsedDate = dayjs(date).startOf('day');
@@ -62,6 +63,51 @@ export async function appRoutes(app: FastifyInstance) {
     return {
       possibleHabits,
       completedHabits
+    }
+  });
+
+  app.patch('/habits/:id/toggle', async (request) => {
+    const { id } = toggleHabitParams.parse(request.params);
+    const today = dayjs().startOf('day').toDate();
+
+    let day = await prisma.day.findUnique({
+      where: {
+        date: today
+      }
+    });
+
+    if(!day) {
+      day = await prisma.day.create({
+        data: {
+          date: today
+        }
+      })
+    }
+
+    const dayHabit = await prisma.dayHabit.findUnique({
+      where: {
+        day_id_habit_id: {
+          day_id: day.id,
+          habit_id: id
+        }
+      }
+    });
+
+    if(dayHabit) {
+      // Remover a marcação de completo
+      await prisma.dayHabit.delete({
+        where: {
+          id: dayHabit.id
+        }
+      });
+    }else{
+      // Completar o hábito
+      await prisma.dayHabit.create({
+        data: {
+          day_id: day.id,
+          habit_id: id
+        }
+      });
     }
   });
 }
