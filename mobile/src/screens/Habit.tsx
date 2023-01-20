@@ -44,15 +44,15 @@ export function Habit() {
           <Checkbox.Root>
             <Checkbox.Content checked={true} />
 
-            <Checkbox.Label className='font-semibold text-2xl'>
+            <Checkbox.Label className='font-semibold text-xl'>
               Beber 2L de água
             </Checkbox.Label>
           </Checkbox.Root>
 
-          <Checkbox.Root>
+          <Checkbox.Root className='mt-3'>
             <Checkbox.Content checked={false} />
 
-            <Checkbox.Label className='font-semibold text-2xl'>
+            <Checkbox.Label className='font-semibold text-xl'>
               Caminhar
             </Checkbox.Label>
           </Checkbox.Root>

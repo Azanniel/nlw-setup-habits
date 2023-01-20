@@ -1,9 +1,13 @@
-import { Text, View, ScrollView } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Text, View, ScrollView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import dayjs from 'dayjs';
 
 import { Header } from '../components/Header';
+import { Loading } from '../components/Loading';
 import { HabitDay, daySize } from '../components/HabitDay';
 
+import { api } from '../lib/axios';
 import { generateRangeDatesFromYearStart } from '../utils/generate-range-between-dates';
 
 const weekDays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
@@ -11,11 +15,44 @@ const datesFromYearStart = generateRangeDatesFromYearStart();
 const minimumSummaryDatesSize = 18 * 5;
 const amountOfDaysToFill = minimumSummaryDatesSize - datesFromYearStart.length;
 
+interface Summary {
+  id: string;
+  date: string;
+  completed: number;
+  amount: number;
+}
+
 export function Home() {
+  const [summary, setSummary] = useState<Summary[]>([]);
+  const [isFetchingSummary, setIsFetchingSummary] = useState(true);
+
   const {navigate} = useNavigation();
 
   function handleNavigateToHabitDetails(date: string) {
     navigate('habit', { date });
+  }
+
+  async function fetchSummaryData() {
+    try {
+      setIsFetchingSummary(true);
+
+      const response = await api.get('/summary');
+
+      setSummary(response.data);
+    } catch (error) {
+      Alert.alert('Ops!', 'Não foi possível carregar o sumário de hábitos.');
+      console.log(error);
+    } finally {
+      setIsFetchingSummary(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchSummaryData();
+  }, []);
+
+  if(isFetchingSummary) {
+    return <Loading />
   }
 
   return (
@@ -44,9 +81,16 @@ export function Home() {
       >
         <View className='flex-row flex-wrap'>
           {datesFromYearStart.map(date => {
+            const dayWithHabits = summary.find(day => {
+              return dayjs(date).isSame(day.date, 'day');
+            });
+
             return (
               <HabitDay
                 key={date.toISOString()}
+                date={date}
+                amount={dayWithHabits?.amount}
+                completed={dayWithHabits?.completed}
                 onPress={() => handleNavigateToHabitDetails(date.toISOString())}
               />
             )
