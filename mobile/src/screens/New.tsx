@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ScrollView, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import colors from 'tailwindcss/colors';
 
@@ -16,6 +17,8 @@ const availableWeekDays = [
 export function New() {
   const [title, setTitle] = useState('');
   const [weekDays, setWeekDays] = useState<number[]>([]);
+
+  const { goBack } = useNavigation();
 
   function handleToggleWeekDay(weekDayIndex: number) {
     if(weekDays.includes(weekDayIndex)){
@@ -43,7 +46,9 @@ export function New() {
       setTitle('');
       setWeekDays([]);
 
-      return Alert.alert('Novo hábito', 'Hábito criado com sucesso');
+      Alert.alert('Novo hábito', 'Hábito criado com sucesso');
+
+      return goBack();
     } catch (error) {
       console.log(error);
       return Alert.alert('Ops!', 'Não foi possível criar o novo hábito');

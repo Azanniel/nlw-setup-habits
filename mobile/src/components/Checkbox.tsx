@@ -1,5 +1,6 @@
 import { TouchableOpacity, TouchableOpacityProps, View, Text, TextProps } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import Animated, { ZoomIn, ZoomOut } from 'react-native-reanimated';
 import colors from 'tailwindcss/colors';
 
 export interface CheckboxRootProps extends TouchableOpacityProps { }
@@ -23,13 +24,17 @@ export interface CheckboxContentProps {
 function CheckboxContent({ checked = false }: CheckboxContentProps) {
   if (checked) {
     return (
-      <View className='h-8 w-8 bg-green-500 rounded-lg items-center justify-center'>
+      <Animated.View
+        className='h-8 w-8 bg-green-500 rounded-lg items-center justify-center'
+        entering={ZoomIn}
+        exiting={ZoomOut}
+      >
         <Feather
           name='check'
           size={20}
           color={colors.white}
         />
-      </View>
+      </Animated.View>
     )
   }
 
