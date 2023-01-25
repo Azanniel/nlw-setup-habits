@@ -55,7 +55,7 @@ Caso tenha interesse em visualizar o Layout temos o [link do figma](https://www.
 
 Abaix todas os exemplos de requisições usadas no projeto.
 
-[![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=&uri=https%3A%2F%2Fgithub.com%2FAzanniel%2Fnodejs-fundamentals%2Fblob%2Fmain%2F.github%2FInsomnia_2023-01-15.json)
+[![Run in Insomnia}](https://insomnia.rest/images/run.svg)](https://insomnia.rest/run/?label=NLW-SETUP&uri=https%3A%2F%2Fgithub.com%2FAzanniel%2Fnlw-setup-habits%2Fblob%2Fmain%2Fserver%2FInsomnia.json)
 
 ## ☕ Contatos
 
